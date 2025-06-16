@@ -32,34 +32,35 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Google Chrome 112
+# Install Google Chrome
 RUN wget -O /tmp/google-chrome.deb "https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb" && \
     apt-get update && apt-get install -y /tmp/google-chrome.deb && \
     rm /tmp/google-chrome.deb && \
     rm -rf /var/lib/apt/lists/*
 
-# Install matching ChromeDriver 112
-RUN wget https://chromedriver.storage.googleapis.com/112.0.5615.49/chromedriver_linux64.zip && \
+# Install matching ChromeDriver
+RUN wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip && \
     mv chromedriver /usr/local/bin/chromedriver && \
     chmod +x /usr/local/bin/chromedriver && \
     rm chromedriver_linux64.zip
 
-# Install Python Selenium 4.9.0
-RUN pip install selenium==4.9.0
+# Install Python dependencies
+RUN pip install selenium==4.9.0 pyyaml requests beautifulsoup4
 
-# Create working directory
+# Install gallery-dl
+RUN pip install gallery-dl
+
+# Create working directories
 WORKDIR /app
-
-
-# Define environment variables for Chrome
-ENV CHROME_VERSION=112.0.5615.49
-ENV CHROME_BIN=/usr/local/bin/google-chrome-stable
-ENV CHROMEDRIVER_BIN=/usr/local/bin/chromedriver
-
-# Define volumes for external config and data mapping
 VOLUME /config
 VOLUME /data
 
-# Run your script by default
+# Define environment variables
+ENV CONFIG_DIR=/config
+ENV DATA_DIR=/data
+ENV CHROME_BIN=/usr/bin/google-chrome-stable
+ENV CHROMEDRIVER_BIN=/usr/local/bin/chromedriver
+
+# Default command
 CMD ["python", "/config/script.py"]
