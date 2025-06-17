@@ -46,7 +46,7 @@ RUN wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedri
     rm chromedriver_linux64.zip
 
 # Install Python dependencies
-RUN pip install selenium==4.9.0 pyyaml requests beautifulsoup4
+RUN pip install selenium==4.9.0 pyyaml requests beautifulsoup4 python-dateutil
 
 # Install gallery-dl
 RUN pip install gallery-dl
